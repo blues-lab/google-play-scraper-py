@@ -4,8 +4,8 @@ class GooglePlayScraper:
 
     def __init__(self):
         self.scraper = GooglePlayScraperWrapper(vars=['collection', 'category'])
-        self.collections = list(self.scraper.collection.values())
-        self.categories = list(self.scraper.category.values()) + ['OVERALL']
+        self.playstore_collections = list(self.scraper.collection.values())
+        self.playstore_categories = list(self.scraper.category.values()) + ['OVERALL']
 
     def app(self, appId, **kwargs):
         return self.scraper.app(appId, **kwargs)
