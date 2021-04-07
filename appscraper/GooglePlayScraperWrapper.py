@@ -9,7 +9,7 @@ logger = logging.getLogger('__main__')
 class GooglePlayScraperException(Exception):
     pass
 
-class GooglePlayScraper:
+class GooglePlayScraperWrapper:
     api_script = (
         "var gplay = require('google-play-scraper'){};"
         "gplay.{}({{{}}})"
@@ -25,7 +25,7 @@ class GooglePlayScraper:
     def __init__(self, memoization=False, vars=[]):
         self.memoization = '.memoized()' if memoization else ''
         for var in vars:
-            setattr(GooglePlayScraper, var, self._execute_var(var))
+            setattr(GooglePlayScraperWrapper, var, self._execute_var(var))
 
     def _execute_api(self, fn_name, keys, **kwargs):
         cmd = self._get_args(keys, **kwargs)

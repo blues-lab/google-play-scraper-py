@@ -1,11 +1,38 @@
-from wrapper import GooglePlayScraper, GooglePlayScraperException
+from appscraper.GooglePlayScraperWrapper import GooglePlayScraperWrapper, GooglePlayScraperException
 
-class Scraper:
+class GooglePlayScraper:
 
     def __init__(self):
-        self.scraper = GooglePlayScraper(vars=['collection', 'category'])
+        self.scraper = GooglePlayScraperWrapper(vars=['collection', 'category'])
         self.collections = list(self.scraper.collection.values())
         self.categories = list(self.scraper.category.values()) + ['OVERALL']
+
+    def app(self, appId, **kwargs):
+        return self.scraper.app(appId, **kwargs)
+
+    def list(self, **kwargs):
+        return self.scraper.list(**kwargs)
+
+    def search(self, term, **kwargs):
+        return self.scraper.search(term, **kwargs)
+
+    def developer(self, devId, **kwargs):
+        return self.scraper.developer(devId, **kwargs)
+
+    def suggest(self, term, **kwargs):
+        return self.scraper.suggest(term, **kwargs)
+
+    def reviews(self, appId, **kwargs):
+        return self.scraper.reviews(term, **kwargs)
+
+    def similar(self, appId, **kwargs):
+        return self.scraper.similar(appId, **kwargs)
+
+    def permissions(self, appId, **kwargs):
+        return self.scraper.permissions(appId, **kwargs)
+
+    def categories(self, **kwargs):
+        return self.scraper.categories(**kwargs)
 
     def get_package_names(self, collections=[], categories=[], **kwargs):
         collections = self.collections if not collections else collections
