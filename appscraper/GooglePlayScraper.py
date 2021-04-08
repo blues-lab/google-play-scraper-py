@@ -34,7 +34,7 @@ class GooglePlayScraper:
     def categories(self, **kwargs):
         return self.scraper.categories(**kwargs)
 
-    def get_package_names(self, collections=[], categories=[], **kwargs):
+    def packages(self, collections=[], categories=[], **kwargs):
         collections = self.collections if not collections else collections
         categories = self.categories if not categories else categories
         package_names = []
@@ -52,7 +52,7 @@ class GooglePlayScraper:
                 package_names += [x['appId'] for x in result]
         return package_names
 
-    def get_apps(self, package_names, **kwargs):
+    def details(self, package_names, **kwargs):
         apps = []
         for package_name in package_names:
             apps.append(self.scraper.app(appId=package_name, **kwargs))

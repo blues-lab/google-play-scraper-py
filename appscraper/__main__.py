@@ -23,165 +23,107 @@ def _setup_logger():
     logger.addHandler(stdout_handler)
     logger.setLevel(logging.INFO)
 
+def _setup_parsers():
+    # Create the top-level parser.
+    parser, subparsers = argparse.ArgumentParser(), {}
+    handle = parser.add_subparsers(help='sub-command help', dest='command')
+
+    # Create the parser for the 'app' command.
+    subparsers['app'] = handle.add_parser('app', help='Retrieves the full detail of an application.')
+    subparsers['app'].add_argument('appId', help='the Google Play id of the application (the ?id= parameter on the url).')
+    subparsers['app'].add_argument('--lang', help='(optional, defaults to "en"): the two letter language code in which to fetch the app page.')
+    subparsers['app'].add_argument('--country', help='')
+
+    # Create the parser for the 'list' command.
+    subparsers['list'] = handle.add_parser('list', help='Retrieves a list of applications from one of the collections at Google Play.')
+    subparsers['list'].add_argument('--collection', help='')
+    subparsers['list'].add_argument('--category', help='')
+    subparsers['list'].add_argument('--age', help='')
+    subparsers['list'].add_argument('--num', help='')
+    subparsers['list'].add_argument('--lang', help='')
+    subparsers['list'].add_argument('--country', help='')
+    subparsers['list'].add_argument('--fullDetail', help='')
+
+    # Create the parser for the 'search' command.
+    subparsers['search'] = handle.add_parser('search', help='Retrieves a list of apps that results of searching by the given term.')
+    subparsers['search'].add_argument('term', help='')
+    subparsers['search'].add_argument('--num', help='')
+    subparsers['search'].add_argument('--lang', help='')
+    subparsers['search'].add_argument('--country', help='')
+    subparsers['search'].add_argument('--fullDetail', help='')
+    subparsers['search'].add_argument('--price', help='')
+
+    # Create the parser for the 'developer' command.
+    subparsers['developer'] = handle.add_parser('developer', help='Returns the list of applications by the given developer name.')
+    subparsers['developer'].add_argument('devId', help='')
+    subparsers['developer'].add_argument('--lang', help='')
+    subparsers['developer'].add_argument('--country', help='')
+    subparsers['developer'].add_argument('--num', help='')
+    subparsers['developer'].add_argument('--fullDetail', help='')
+
+    # Create the parser for the 'suggest' command.
+    subparsers['suggest'] = handle.add_parser('suggest', help='Given a string returns up to five suggestion to complete a search query term.')
+    subparsers['suggest'].add_argument('term', help='')
+    subparsers['suggest'].add_argument('--lang', help='')
+    subparsers['suggest'].add_argument('--country', help='')
+
+    # Create the parser for the 'reviews' command.
+    subparsers['reviews'] = handle.add_parser('reviews', help='Retrieves a page of reviews for a specific application.')
+    subparsers['reviews'].add_argument('appId', help='')
+    subparsers['reviews'].add_argument('--lang', help='')
+    subparsers['reviews'].add_argument('--country', help='')
+    subparsers['reviews'].add_argument('--sort', help='')
+    subparsers['reviews'].add_argument('--num', help='')
+    subparsers['reviews'].add_argument('--paginate', help='')
+    subparsers['reviews'].add_argument('--nextPaginationToken', help='')
+
+    # Create the parser for the 'similar' command.
+    subparsers['similar'] = handle.add_parser('similar', help='Returns a list of similar apps to the one specified.')
+    subparsers['similar'].add_argument('appId', help='')
+    subparsers['similar'].add_argument('--lang', help='')
+    subparsers['similar'].add_argument('--country', help='')
+    subparsers['similar'].add_argument('--fullDetail', help='')
+
+    # Create the parser for the 'permissions' command.
+    subparsers['permissions'] = handle.add_parser('permissions', help='Returns the list of permissions an app has access to.')
+    subparsers['permissions'].add_argument('appId', help='the Google Play id of the application (the ?id= parameter on the url).')
+    subparsers['permissions'].add_argument('--lang',  help='')
+    subparsers['permissions'].add_argument('--short', help='')
+
+    # Create the parser for the 'categories' command.
+    subparsers['categories'] = handle.add_parser('categories', help='Retrieve a full list of categories present from dropdown menu on Google Play.')
+
+    # Add universal commands to all subparsers.
+    for subparser in subparsers.values():
+        subparser.add_argument('--output_path', '-o', help='')
+        subparser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
+        subparser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
+
+    return parser.parse_args()
+
 class CommandLineTool:
 
     scraper = GooglePlayScraper()
 
-    def __init__(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('command', help='Subcommand to run')
-        parser.add_argument('--output_path', '-o', help='')
-        parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
-        args = parser.parse_known_args()[0]
-        logger_level = logging.DEBUG if args.verbose else logging.INFO
-        logger.setLevel(logger_level)
+    def __init__(self, args):
+        output_path = args.output_path
+        logger.setLevel(logging.DEBUG) if args.verbose else logger.setLevel(logging.INFO)
 
-        if not hasattr(self, args.command):
-            print('Unrecognized command')
-            parser.print_help()
-            exit(1)
-
-        # Use dispatch pattern to invoke method with same name.
-        results = getattr(self, args.command)()
+        wrapper_fns = [x for x in dir(GooglePlayScraper) if callable(getattr(GooglePlayScraper, x))]
+        wrapper_fns = [x for x in wrapper_fns if len(x) > 0 and x[0] != '_']
+        vargs = {k:v for k, v in vars(args).items() if v is not None}
+        results = getattr(self.scraper, args.command)(**vargs)
 
         # Save output to file if provided or print to STDOUT.
-        print(results) if args.output_path is None else self._save_results(results, args.output_path)
+        print(results) if output_path is None else self._save_results(results, args.output_path)
 
     def _save_results(self, results, output_path):
         with open(output_path, 'w') as f:
             json.dump(results, f)
 
-    def app(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--appId', help='', required=True)
-        parser.add_argument('--lang', help='')
-        parser.add_argument('--country', help='')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        assert args.appId is not None, 'Must provide a valid Android App ID.'
-        vargs = {k:v for k, v in vars(args).items() if v is not None}
-        return self.scraper.app(**vargs)
-
-    def list(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--collection', help='')
-        parser.add_argument('--category', help='')
-        parser.add_argument('--age', help='')
-        parser.add_argument('--num', help='')
-        parser.add_argument('--lang', help='')
-        parser.add_argument('--country', help='')
-        parser.add_argument('--fullDetail', help='')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        vargs = {k:v for k, v in vars(args).items() if v is not None}
-        return self.scraper.list(**vargs)
-
-    def search(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--term', help='', required=True)
-        parser.add_argument('--num', help='')
-        parser.add_argument('--lang', help='')
-        parser.add_argument('--country', help='')
-        parser.add_argument('--fullDetail', help='')
-        parser.add_argument('--price', help='')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        assert args.term is not None, 'Must provide a valid search term.'
-        vargs = {k:v for k, v in vars(args).items() if v is not None}
-        return self.scraper.search(**vargs)
-
-    def developer(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--devId', help='', required=True)
-        parser.add_argument('--lang', help='')
-        parser.add_argument('--country', help='')
-        parser.add_argument('--num', help='')
-        parser.add_argument('--fullDetail', help='')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        assert args.devId is not None, 'Must provide a valid developer ID.'
-        vargs = {k:v for k, v in vars(args).items() if v is not None}
-        return self.scraper.developer(**vargs)
-
-    def suggest(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--term', help='', required=True)
-        parser.add_argument('--lang', help='')
-        parser.add_argument('--country', help='')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        assert args.term is not None, 'Must provide a valid search term.'
-        vargs = {k:v for k, v in vars(args).items() if v is not None}
-        return self.scraper.suggest(**vargs)
-
-    def reviews(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--appId', help='', required=True)
-        parser.add_argument('--lang', help='')
-        parser.add_argument('--country', help='')
-        parser.add_argument('--sort', help='')
-        parser.add_argument('--num', help='')
-        parser.add_argument('--paginate', help='')
-        parser.add_argument('--nextPaginationToken', help='')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        assert args.appId is not None, 'Must provide a valid Android App ID.'
-        vargs = {k:v for k, v in vars(args).items() if v is not None}
-        return self.scraper.reviews(**vargs)
-
-    def similar(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--appId', help='', required=True)
-        parser.add_argument('--lang', help='')
-        parser.add_argument('--country', help='')
-        parser.add_argument('--fullDetail', help='')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        assert args.appId is not None, 'Must provide a valid Android App ID.'
-        vargs = {k:v for k, v in vars(args).items() if v is not None}
-        return self.scraper.similar(**vargs)
-
-    def permissions(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--appId', help='', required=True)
-        parser.add_argument('--lang', help='')
-        parser.add_argument('--short', help='')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        assert args.appId is not None, 'Must provide a valid Android App ID.'
-        vargs = {k:v for k, v in vars(args).items() if v is not None}
-        return self.scraper.permissions(**vargs)
-
-    def categories(self):
-        return self.scraper.categories()
-
-    def packages(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--collections', nargs='+', help='')
-        parser.add_argument('--categories', nargs='+', help='')
-        parser.add_argument('--num', default=200, type=int, help='Number of apps per category to scrape.')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        return self.scraper.get_package_names(**vars(args))
-
-    def details(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('app_input_path', help='Path to file where app package names are located. Passing this argument scrapes only apps listed in the "input_path"')
-        parser.add_argument('--throttle', default=1, type=int, help='Upper bound to the amount of requests that will be attempted per second.')
-        args = parser.parse_known_args()[0]
-        assert os.path.isfile(args.app_input_path), 'Must specify path to valid file containing app package names.'
-
-        with open(args.app_input_path, 'r') as f:
-            data = f.read()
-        try:
-            package_names = json.loads(data)
-        except json.decoder.JSONDecodeError as e:
-            package_names = data.rstrip().split('\n')
-        return self.scraper.get_apps(package_names, **vars(args))
-
 def main():
     _setup_logger()
-    CommandLineTool()
+    CommandLineTool(_setup_parsers())
 
 if __name__ == "__main__":
     main()
