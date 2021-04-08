@@ -54,6 +54,8 @@ class GooglePlayScraperWrapper:
 
     def _get_args(self, keys, **kwargs):
         def stringify(x):
+            if x is None:
+                return 'null'
             if isinstance(x, str):
                 return "'{}'".format(x)
             elif type(x) == bool:
