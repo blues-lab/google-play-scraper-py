@@ -6,7 +6,7 @@ import logging
 WORK_DIR, SELF_DIR = os.getcwd(), os.path.dirname(os.path.abspath(__file__))
 logger = logging.getLogger('__main__')
 
-class GooglePlayScraperException(Exception):
+class GooglePlayScraperWrapperException(Exception):
     pass
 
 class GooglePlayScraperWrapper:
@@ -43,14 +43,14 @@ class GooglePlayScraperWrapper:
             os.chdir(SELF_DIR)
             process = subprocess.run(args, capture_output=True, check=True)
         except subprocess.CalledProcessError as e:
-            raise GooglePlayScraperException(e) from None
+            raise GooglePlayScraperWrapperException(e) from None
         finally:
             os.chdir(WORK_DIR)
         stdout, stderr = process.stdout.decode(), process.stderr.decode()
         try:
             return json.loads(stdout)
         except json.decoder.JSONDecodeError as e:
-            raise GooglePlayScraperException(stdout) from None
+            raise GooglePlayScraperWrapperException(stdout) from None
 
     def _get_args(self, keys, **kwargs):
         def stringify(x):
