@@ -4,7 +4,7 @@ import sys
 import json
 import logging
 import argparse
-from .GooglePlayScraper import GooglePlayScraper
+import scraper.scraper
 
 logger = logging.getLogger(__name__)
 
@@ -103,23 +103,21 @@ def _setup_parsers():
 
 class CommandLineTool:
 
-    scraper = GooglePlayScraper()
-
     def __init__(self, parser):
         args = parser.parse_args()
 
-        wrapper_fns = [x for x in dir(GooglePlayScraper) if callable(getattr(GooglePlayScraper, x))]
+        wrapper_fns = [x for x in dir(scraper) if callable(getattr(scraper, x))]
         wrapper_fns = [x for x in wrapper_fns if len(x) > 0 and x[0] != '_']
         vargs = {k:v for k, v in vars(args).items() if v is not None}
 
         # Check if the supplied command is valid.
-        if args.command is None or not hasattr(self.scraper, args.command):
+        if args.command is None or not hasattr(scraper, args.command):
             print('Unrecognized command: {}.'.format(args.command))
             parser.print_help()
             exit(1)
 
         logger.setLevel(logging.DEBUG) if args.verbose else logger.setLevel(logging.INFO)
-        results = getattr(self.scraper, args.command)(**vargs)
+        results = getattr(scraper, args.command)(**vargs)
 
         # Save output to file if provided or print to STDOUT.
         print(results) if args.output_path is None else self._save_results(results, args.output_path)

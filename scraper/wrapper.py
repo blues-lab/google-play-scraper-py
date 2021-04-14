@@ -3,13 +3,12 @@ import json
 import os
 import logging
 
+from .exceptions import ScraperException
+
 WORK_DIR, SELF_DIR = os.getcwd(), os.path.dirname(os.path.abspath(__file__))
 logger = logging.getLogger('__main__')
 
-class GooglePlayScraperWrapperException(Exception):
-    pass
-
-class GooglePlayScraperWrapper:
+class Wrapper:
     api_script = (
         "var gplay = require('google-play-scraper'){};"
         "gplay.{}({{{}}})"
@@ -25,7 +24,7 @@ class GooglePlayScraperWrapper:
     def __init__(self, memoization=False, vars=[]):
         self.memoization = '.memoized()' if memoization else ''
         for var in vars:
-            setattr(GooglePlayScraperWrapper, var, self._execute_var(var))
+            setattr(Wrapper, var, self._execute_var(var))
 
     def _execute_api(self, fn_name, keys, **kwargs):
         cmd = self._get_args(keys, **kwargs)
@@ -43,14 +42,14 @@ class GooglePlayScraperWrapper:
             os.chdir(SELF_DIR)
             process = subprocess.run(args, capture_output=True, check=True)
         except subprocess.CalledProcessError as e:
-            raise GooglePlayScraperWrapperException(e) from None
+            raise ScraperException(e) from None
         finally:
             os.chdir(WORK_DIR)
         stdout, stderr = process.stdout.decode(), process.stderr.decode()
         try:
             return json.loads(stdout)
         except json.decoder.JSONDecodeError as e:
-            raise GooglePlayScraperWrapperException(stdout) from None
+            raise ScraperException(stdout) from None
 
     def _get_args(self, keys, **kwargs):
         def stringify(x):

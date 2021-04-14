@@ -1,14 +1,12 @@
 # google-play-scraper-py
 
-...
+Python wrapper around the [Node.js module](https://github.com/facundoolano/google-play-scraper) to scrape application data from the Google Play store. Please refer to the module's page for the most up-to-date information about the API.
+
+Any issues with the wrapped scraper should be directed to the developer of the original module.
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
-```bash
-pip install ...
-```
+TODO
 
 ## Example
 
