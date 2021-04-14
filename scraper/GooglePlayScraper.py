@@ -1,4 +1,4 @@
-from appscraper.GooglePlayScraperWrapper import GooglePlayScraperWrapper, GooglePlayScraperWrapperException
+from .GooglePlayScraperWrapper import GooglePlayScraperWrapper, GooglePlayScraperWrapperException
 
 class GooglePlayScraper:
     """

@@ -4,7 +4,7 @@ import sys
 import json
 import logging
 import argparse
-from appscraper.GooglePlayScraper import GooglePlayScraper
+from .GooglePlayScraper import GooglePlayScraper
 
 logger = logging.getLogger(__name__)
 
