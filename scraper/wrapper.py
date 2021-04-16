@@ -5,18 +5,22 @@ import logging
 
 from .exceptions import ScraperException
 
-WORK_DIR, SELF_DIR = os.getcwd(), os.path.dirname(os.path.abspath(__file__))
+SELF_DIR = os.path.dirname(os.path.abspath(__file__))
 logger = logging.getLogger('__main__')
 
 class Wrapper:
+
+    # TODO: check that this is a valid path.
+    require_dir = os.path.join(SELF_DIR, 'node_modules', 'google-play-scraper')
+
     api_script = (
-        "var gplay = require('google-play-scraper'){};"
+        "var gplay = require('{}'){};"
         "gplay.{}({{{}}})"
         ".then(JSON.stringify).then(console.log).catch(console.log);"
     )
 
     var_script = (
-        "var gplay = require('google-play-scraper'){};"
+        "var gplay = require('{}'){};"
         "let x = gplay.{};"
         "console.log(JSON.stringify(x));"
     )
@@ -28,24 +32,22 @@ class Wrapper:
 
     def _execute_api(self, fn_name, keys, **kwargs):
         cmd = self._get_args(keys, **kwargs)
-        script = self.api_script.format(self.memoization, fn_name, cmd)
+        script = self.api_script.format(self.require_dir, self.memoization, fn_name, cmd)
         return self._execute(script)
 
     def _execute_var(self, var_name):
-        script = self.var_script.format(self.memoization, var_name)
+        script = self.var_script.format(self.require_dir, self.memoization, var_name)
         return self._execute(script)
 
     def _execute(self, script):
         logger.debug('Executing script: {}'.format(script))
         args = ['node', '-e', script]
         try:
-            os.chdir(SELF_DIR)
             process = subprocess.run(args, capture_output=True, check=True)
         except subprocess.CalledProcessError as e:
-            raise ScraperException(e) from None
-        finally:
-            os.chdir(WORK_DIR)
-        stdout, stderr = process.stdout.decode(), process.stderr.decode()
+            stderr = e.stderr.decode()
+            raise ScraperException(stderr) from None
+        stdout = process.stdout.decode()
         try:
             return json.loads(stdout)
         except json.decoder.JSONDecodeError as e:
