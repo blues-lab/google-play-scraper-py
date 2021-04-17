@@ -1,14 +1,12 @@
-from .wrapper import Wrapper
+from scraper import wrapper as _wrapper
 
-_wrapper = Wrapper(vars=['collection', 'category', 'age', 'sort'])
-
-# Model attribues.
+# Public module attribues.
 collection = _wrapper.collection
 category = _wrapper.category
 age = _wrapper.age
 sort = _wrapper.sort
 
-# Model methods.
+# Public module methods.
 def app(appId, lang='en', country='us', **kwargs):
     """
     Retrieves the full detail of an application.

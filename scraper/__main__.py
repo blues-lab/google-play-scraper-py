@@ -32,7 +32,7 @@ def _setup_parsers():
     subparsers['app'] = handle.add_parser('app', help='Retrieves the full detail of an application.')
     subparsers['app'].add_argument('appId', help='the Google Play id of the application (the ?id= parameter on the url).')
     subparsers['app'].add_argument('--lang', help='(optional, defaults to \'en\'): the two letter language code in which to fetch the app page.')
-    subparsers['app'].add_argument('--country', help='')
+    subparsers['app'].add_argument('--country', help='(optional, defaults to \'us\'): the two letter country code used to retrieve the applications.')
 
     # Create the parser for the 'list' command.
     subparsers['list'] = handle.add_parser('list', help='Retrieves a list of applications from one of the collections at Google Play.')
@@ -42,7 +42,7 @@ def _setup_parsers():
     subparsers['list'].add_argument('--num', help='(optional, defaults to 500): the amount of apps to retrieve.')
     subparsers['list'].add_argument('--lang', help='(optional, defaults to \'en\'): the two letter language code used to retrieve the applications.')
     subparsers['list'].add_argument('--country', help='(optional, defaults to \'us\'): the two letter country code used to retrieve the applications.')
-    subparsers['list'].add_argument('--fullDetail', help='(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
+    subparsers['list'].add_argument('--fullDetail', action='store_true', help='(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
 
     # Create the parser for the 'search' command.
     subparsers['search'] = handle.add_parser('search', help='Retrieves a list of apps that results of searching by the given term.')
@@ -50,7 +50,7 @@ def _setup_parsers():
     subparsers['search'].add_argument('--num', help='(optional, defaults to 20, max is 250): the amount of apps to retrieve.')
     subparsers['search'].add_argument('--lang', help='(optional, defaults to \'en\'): the two letter language code used to retrieve the applications.')
     subparsers['search'].add_argument('--country', help='(optional, defaults to \'us\'): the two letter country code used to retrieve the applications.')
-    subparsers['search'].add_argument('--fullDetail', help='(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
+    subparsers['search'].add_argument('--fullDetail', action='store_true', help='(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
     subparsers['search'].add_argument('--price', help='(optional, defaults to all): allows to control if the results apps are free, paid or both. Accepted values are: \'all\', \'free\' and \'paid\'.')
 
     # Create the parser for the 'developer' command.
@@ -59,7 +59,7 @@ def _setup_parsers():
     subparsers['developer'].add_argument('--lang', help='(optional, defaults to \'en\'): the two letter language code in which to fetch the app list.')
     subparsers['developer'].add_argument('--country', help='(optional, defaults to \'us\'): the two letter country code used to retrieve the applications. Needed when the app is available only in some countries.')
     subparsers['developer'].add_argument('--num', help='(optional, defaults to 60): the amount of apps to retrieve.')
-    subparsers['developer'].add_argument('--fullDetail', help='(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
+    subparsers['developer'].add_argument('--fullDetail', action='store_true', help='(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
 
     # Create the parser for the 'suggest' command.
     subparsers['suggest'] = handle.add_parser('suggest', help='Given a string returns up to five suggestion to complete a search query term.')
@@ -82,13 +82,13 @@ def _setup_parsers():
     subparsers['similar'].add_argument('appId', help='the Google Play id of the application to get similar apps for.')
     subparsers['similar'].add_argument('--lang', help='(optional, defaults to \'en\'): the two letter language code used to retrieve the applications.')
     subparsers['similar'].add_argument('--country', help='(optional, defaults to \'us\'): the two letter country code used to retrieve the applications.')
-    subparsers['similar'].add_argument('--fullDetail', help='(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
+    subparsers['similar'].add_argument('--fullDetail', action='store_true', help='(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
 
     # Create the parser for the 'permissions' command.
     subparsers['permissions'] = handle.add_parser('permissions', help='Returns the list of permissions an app has access to.')
     subparsers['permissions'].add_argument('appId', help='the Google Play id of the application to get permissions for.')
     subparsers['permissions'].add_argument('--lang',  help='(optional, defaults to \'en\'): the two letter language code in which to fetch the permissions.')
-    subparsers['permissions'].add_argument('--short', help='(optional, defaults to false): if true, the permission names will be returned instead of permission/description objects.')
+    subparsers['permissions'].add_argument('--short', action='store_true', help='(optional, defaults to false): if true, the permission names will be returned instead of permission/description objects.')
 
     # Create the parser for the 'categories' command.
     subparsers['categories'] = handle.add_parser('categories', help='Retrieve a full list of categories present from dropdown menu on Google Play.')

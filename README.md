@@ -2,76 +2,79 @@
 
 Python wrapper around the [Node.js module](https://github.com/facundoolano/google-play-scraper) to scrape application data from the Google Play store. Please refer to the module's page for the most up-to-date information about the API.
 
-Any issues with the wrapped scraper should be directed to the developer of the original module.
+Any questions, suggestions, or issues with the underlying Node.js functionality should be directed to [facundoolano](https://github.com/facundoolano), who is the developer of the original module.
 
 ## Installation
 
-TODO
+First, ensure that you have the latest version of [Node.js](https://nodejs.org/en/download/) installed on your machine.
+
+Then, install the library:
+
+```
+pip install google-play-scraper-py
+```
+
+This will also include the required Node dependencies.
 
 ## Example
 
 ```python
-import scraper, json
+import scraper
 
 result = scraper.app(appId='com.google.android.apps.translate')
-
-with open('result.json', 'w') as f:
-    json.dump(result, f)
+print(result)
 ```
 
-`result.json`
+Results:
 
-```json
+```python
 {
-  "title": "Google Translate",
-  "description": "\u2022 Text translation: Translate between 108 languages by typing\r\n\u2022 Tap to Translate: Copy text in any app and tap the Google Translate icon to translate (all languages)\r\n\u2022 Offline: Translate with no internet connection (59 languages)\r\n\u2022 Instant camera translation: Translate text in images instantly by just pointing your camera (94 languages)\r\n\u2022 Photos: Take or import photos for higher quality translations (90 languages)\r\n\u2022 Conversations: Translate bilingual conversations on the fly (70 languages)\r\n\u2022 Handwriting: Draw text characters instead of typing (96 languages)\r\n\u2022 Phrasebook: Star and save translated words and phrases for future reference (all languages)\r\n\u2022 Cross-device syncing: Login to sync phrasebook between app and desktop\r\n\u2022 Transcribe: Continuously translate someone speaking a different language in near real-time (8 languages)\r\n\r\nTranslations between the following languages are supported:\r\nAfrikaans, Albanian, Amharic, Arabic, Armenian, Azerbaijani, Basque, Belarusian, Bengali, Bosnian, Bulgarian, Catalan, Cebuano, Chichewa, Chinese (Simplified), Chinese (Traditional), Corsican, Croatian, Czech, Danish, Dutch, English, Esperanto, Estonian, Filipino, Finnish, French, Frisian, Galician, Georgian, German, Greek, Gujarati, Haitian Creole, Hausa, Hawaiian, Hebrew, Hindi, Hmong, Hungarian, Icelandic, Igbo, Indonesian, Irish, Italian, Japanese, Javanese, Kannada, Kazakh, Khmer, Kinyarwanda, Korean, Kurdish (Kurmanji), Kyrgyz, Lao, Latin, Latvian, Lithuanian, Luxembourgish, Macedonian, Malagasy, Malay, Malayalam, Maltese, Maori, Marathi, Mongolian, Myanmar (Burmese), Nepali, Norwegian, Odia (Oriya), Pashto, Persian, Polish, Portuguese, Punjabi, Romanian, Russian, Samoan, Scots Gaelic, Serbian, Sesotho, Shona, Sindhi, Sinhala, Slovak, Slovenian, Somali, Spanish, Sundanese, Swahili, Swedish, Tajik, Tamil, Tatar, Telugu, Thai, Turkish, Turkmen, Ukrainian, Urdu, Uyghur, Uzbek, Vietnamese, Welsh, Xhosa, Yiddish, Yoruba, Zulu\r\n\r\nPermissions Notice\r\nGoogle Translate may ask for permission to access the following features:\r\n\u2022 Microphone for speech translation\r\n\u2022 Camera for translating text via the camera\r\n\u2022 SMS for translating text messages\r\n\u2022 External storage for downloading offline translation data\r\n\u2022 Accounts and credentials for signing-in and syncing across devices",
-  "descriptionHTML": "\u2022 Text translation: Translate between 108 languages by typing<br>\u2022 Tap to Translate: Copy text in any app and tap the Google Translate icon to translate (all languages)<br>\u2022 Offline: Translate with no internet connection (59 languages)<br>\u2022 Instant camera translation: Translate text in images instantly by just pointing your camera (94 languages)<br>\u2022 Photos: Take or import photos for higher quality translations (90 languages)<br>\u2022 Conversations: Translate bilingual conversations on the fly (70 languages)<br>\u2022 Handwriting: Draw text characters instead of typing (96 languages)<br>\u2022 Phrasebook: Star and save translated words and phrases for future reference (all languages)<br>\u2022 Cross-device syncing: Login to sync phrasebook between app and desktop<br>\u2022 Transcribe: Continuously translate someone speaking a different language in near real-time (8 languages)<br><br>Translations between the following languages are supported:<br>Afrikaans, Albanian, Amharic, Arabic, Armenian, Azerbaijani, Basque, Belarusian, Bengali, Bosnian, Bulgarian, Catalan, Cebuano, Chichewa, Chinese (Simplified), Chinese (Traditional), Corsican, Croatian, Czech, Danish, Dutch, English, Esperanto, Estonian, Filipino, Finnish, French, Frisian, Galician, Georgian, German, Greek, Gujarati, Haitian Creole, Hausa, Hawaiian, Hebrew, Hindi, Hmong, Hungarian, Icelandic, Igbo, Indonesian, Irish, Italian, Japanese, Javanese, Kannada, Kazakh, Khmer, Kinyarwanda, Korean, Kurdish (Kurmanji), Kyrgyz, Lao, Latin, Latvian, Lithuanian, Luxembourgish, Macedonian, Malagasy, Malay, Malayalam, Maltese, Maori, Marathi, Mongolian, Myanmar (Burmese), Nepali, Norwegian, Odia (Oriya), Pashto, Persian, Polish, Portuguese, Punjabi, Romanian, Russian, Samoan, Scots Gaelic, Serbian, Sesotho, Shona, Sindhi, Sinhala, Slovak, Slovenian, Somali, Spanish, Sundanese, Swahili, Swedish, Tajik, Tamil, Tatar, Telugu, Thai, Turkish, Turkmen, Ukrainian, Urdu, Uyghur, Uzbek, Vietnamese, Welsh, Xhosa, Yiddish, Yoruba, Zulu<br><br>Permissions Notice<br>Google Translate may ask for permission to access the following features:<br>\u2022 Microphone for speech translation<br>\u2022 Camera for translating text via the camera<br>\u2022 SMS for translating text messages<br>\u2022 External storage for downloading offline translation data<br>\u2022 Accounts and credentials for signing-in and syncing across devices",
-  "summary": "The world is closer than ever with over 100 languages",
-  "installs": "1,000,000,000+",
-  "minInstalls": 1000000000,
-  "maxInstalls": 1003871250,
-  "score": 4.4777126,
-  "scoreText": "4.5",
-  "ratings": 7826076,
-  "reviews": 1923362,
-  "histogram": {
-    "1": 457576,
-    "2": 158290,
-    "3": 420399,
-    "4": 941480,
-    "5": 5848328
-  },
-  "price": 0,
-  "free": true,
-  "currency": "USD",
-  "priceText": "Free",
-  "offersIAP": false,
-  "size": "Varies with device",
-  "androidVersion": "VARY",
-  "androidVersionText": "Varies with device",
-  "developer": "Google LLC",
-  "developerId": "5700313618786177705",
-  "developerEmail": "translate-mobile-support@google.com",
-  "developerWebsite": "http://support.google.com/translate",
-  "developerAddress": "1600 Amphitheatre Parkway, Mountain View 94043",
-  "privacyPolicy": "http://www.google.com/policies/privacy/",
-  "developerInternalID": "5700313618786177705",
-  "genre": "Tools",
-  "genreId": "TOOLS",
-  "icon": "https://play-lh.googleusercontent.com/ZrNeuKthBirZN7rrXPN1JmUbaG8ICy3kZSHt-WgSnREsJzo2txzCzjIoChlevMIQEA",
-  "headerImage": "https://play-lh.googleusercontent.com/e4Sfy0cOmqpike76V6N6n-tDVbtbmt6MxbnbkKBZ_7hPHZRfsCeZhMBZK8eFDoDa1Vf-",
-  "screenshots": ["..."],
-  "contentRating": "Everyone",
-  "adSupported": false,
-  "updated": 1616099487000,
-  "version": "Varies with device",
-  "recentChanges": "Bug fixes and improvements",
-  "comments": ["..."],
-  "editorsChoice": false,
-  "appId": "com.google.android.apps.translate",
-  "url": "https://play.google.com/store/apps/details?id=com.google.android.apps.translate&hl=en&gl=us"
+  'adSupported': False,
+  'androidVersion': 'VARY',
+  'androidVersionText': 'Varies with device',
+  'appId': 'com.google.android.apps.translate',
+  'comments': [...],
+  'contentRating': 'Everyone',
+  'currency': 'USD',
+  'description': ...,
+  'descriptionHTML': ...,
+  'developer': 'Google LLC',
+  'developerAddress': '1600 Amphitheatre Parkway, Mountain View 94043',
+  'developerEmail': 'translate-mobile-support@google.com',
+  'developerId': '5700313618786177705',
+  'developerInternalID': '5700313618786177705',
+  'developerWebsite': 'http://support.google.com/translate',
+  'editorsChoice': False,
+  'free': True,
+  'genre': 'Tools',
+  'genreId': 'TOOLS',
+  'headerImage': 'https://play-lh.googleusercontent.com/e4Sfy0cOmqpike76V6N6n-tDVbtbmt6MxbnbkKBZ_7hPHZRfsCeZhMBZK8eFDoDa1Vf-',
+  'histogram': {'1': 458414,
+               '2': 158469,
+               '3': 420198,
+               '4': 941431,
+               '5': 5851958},
+  'icon': 'https://play-lh.googleusercontent.com/ZrNeuKthBirZN7rrXPN1JmUbaG8ICy3kZSHt-WgSnREsJzo2txzCzjIoChlevMIQEA',
+  'installs': '1,000,000,000+',
+  'maxInstalls': 1004629541,
+  'minInstalls': 1000000000,
+  'offersIAP': False,
+  'price': 0,
+  'priceText': 'Free',
+  'privacyPolicy': 'http://www.google.com/policies/privacy/',
+  'ratings': 7830472,
+  'recentChanges': 'Bug fixes and improvements',
+  'reviews': 1924772,
+  'score': 4.477567,
+  'scoreText': '4.5',
+  'screenshots': [...],
+  'size': 'Varies with device',
+  'summary': 'The world is closer than ever with over 100 languages',
+  'title': 'Google Translate',
+  'updated': 1616099487000,
+  'url': 'https://play.google.com/store/apps/details?id=com.google.android.apps.translate&hl=en&gl=us',
+  'version': 'Varies with device'
 }
-
 ```
 
 ## Usage

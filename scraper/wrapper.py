@@ -8,7 +8,8 @@ from .exceptions import ScraperException
 SELF_DIR = os.path.dirname(os.path.abspath(__file__))
 logger = logging.getLogger('__main__')
 
-class Wrapper:
+# Private module class.
+class _Wrapper:
 
     # TODO: check that this is a valid path.
     require_dir = os.path.join(SELF_DIR, 'node_modules', 'google-play-scraper')
@@ -28,7 +29,7 @@ class Wrapper:
     def __init__(self, memoization=False, vars=[]):
         self.memoization = '.memoized()' if memoization else ''
         for var in vars:
-            setattr(Wrapper, var, self._execute_var(var))
+            setattr(_Wrapper, var, self._execute_var(var))
 
     def _execute_api(self, fn_name, keys, **kwargs):
         cmd = self._get_args(keys, **kwargs)
@@ -66,55 +67,65 @@ class Wrapper:
         args = ', '.join(["{}: {}".format(k, stringify(v)) for k, v in kwargs.items() if k in keys + ['throttle']])
         return args
 
-    def app(self, appId, **kwargs):
-        keys = ['appId', 'lang', 'country']
-        output = self._execute_api('app', keys, **{'appId': appId, **kwargs})
-        return output
+# Private module attributes.
+_wrapper = _Wrapper(vars=['collection', 'category', 'age', 'sort'])
 
-    def list(self, **kwargs):
-        keys = [
-            'collection', 'category', 'age', 'num',
-            'lang', 'country', 'fullDetail'
-        ]
-        output = self._execute_api('list', keys, **kwargs)
-        return output
+# Public module attributes.
+collection = _wrapper.collection
+category = _wrapper.category
+age = _wrapper.age
+sort = _wrapper.sort
 
-    def search(self, term, **kwargs):
-        keys = [
-            'term', 'num', 'lang',
-            'country', 'fullDetail', 'price'
-        ]
-        output = self._execute_api('search', keys,  **{'term': term, **kwargs})
-        return output
+# Public module methods.
+def app(appId, **kwargs):
+    keys = ['appId', 'lang', 'country']
+    output = _wrapper._execute_api('app', keys, **{'appId': appId, **kwargs})
+    return output
 
-    def developer(self, devId, **kwargs):
-        keys = ['devId', 'lang', 'country', 'num', 'fullDetail']
-        output = self._execute_api('developer', keys,  **{'devId': devId, **kwargs})
-        return output
+def list(**kwargs):
+    keys = [
+        'collection', 'category', 'age', 'num',
+        'lang', 'country', 'fullDetail'
+    ]
+    output = _wrapper._execute_api('list', keys, **kwargs)
+    return output
 
-    def suggest(self, term, **kwargs):
-        keys = ['term', 'lang', 'country']
-        output = self._execute_api('suggest', keys,  **{'term': term, **kwargs})
-        return output
+def search(term, **kwargs):
+    keys = [
+        'term', 'num', 'lang',
+        'country', 'fullDetail', 'price'
+    ]
+    output = _wrapper._execute_api('search', keys,  **{'term': term, **kwargs})
+    return output
 
-    def reviews(self, appId, **kwargs):
-        keys = [
-            'appId', 'lang', 'country', 'sort',
-            'num', 'paginate', 'nextPaginationToken'
-        ]
-        output = self._execute_api('reviews', keys,  **{'appId': appId, **kwargs})
-        return output
+def developer(devId, **kwargs):
+    keys = ['devId', 'lang', 'country', 'num', 'fullDetail']
+    output = _wrapper._execute_api('developer', keys,  **{'devId': devId, **kwargs})
+    return output
 
-    def similar(self, appId, **kwargs):
-        keys = ['appId', 'lang', 'country', 'fullDetail']
-        output = self._execute_api('similar', keys,  **{'appId': appId, **kwargs})
-        return output
+def suggest(term, **kwargs):
+    keys = ['term', 'lang', 'country']
+    output = _wrapper._execute_api('suggest', keys,  **{'term': term, **kwargs})
+    return output
 
-    def permissions(self, appId, **kwargs):
-        keys = ['appId', 'lang', 'short']
-        output = self._execute_api('permissions', keys,  **{'appId': appId, **kwargs})
-        return output
+def reviews(appId, **kwargs):
+    keys = [
+        'appId', 'lang', 'country', 'sort',
+        'num', 'paginate', 'nextPaginationToken'
+    ]
+    output = _wrapper._execute_api('reviews', keys,  **{'appId': appId, **kwargs})
+    return output
 
-    def categories(self, **kwargs):
-        output = self._execute_api('categories', [],  **kwargs)
-        return output
+def similar(appId, **kwargs):
+    keys = ['appId', 'lang', 'country', 'fullDetail']
+    output = _wrapper._execute_api('similar', keys,  **{'appId': appId, **kwargs})
+    return output
+
+def permissions(appId, **kwargs):
+    keys = ['appId', 'lang', 'short']
+    output = _wrapper._execute_api('permissions', keys,  **{'appId': appId, **kwargs})
+    return output
+
+def categories(**kwargs):
+    output = _wrapper._execute_api('categories', [],  **kwargs)
+    return output
