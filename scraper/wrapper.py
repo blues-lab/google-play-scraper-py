@@ -11,7 +11,6 @@ logger = logging.getLogger('__main__')
 # Private module class.
 class _Wrapper:
 
-    # TODO: check that this is a valid path.
     require_dir = os.path.join(SELF_DIR, 'node_modules', 'google-play-scraper')
 
     api_script = (

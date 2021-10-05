@@ -1,4 +1,5 @@
-from scraper import wrapper as _wrapper
+import scraper.wrapper as _wrapper
+import scraper.exceptions as _exceptions
 
 # Public module attribues.
 collection = _wrapper.collection
@@ -6,7 +7,7 @@ category = _wrapper.category
 age = _wrapper.age
 sort = _wrapper.sort
 
-# Public module methods.
+# Public module methods - wrappers around the original API.
 def app(appId, lang='en', country='us', **kwargs):
     """
     Retrieves the full detail of an application.
@@ -34,7 +35,13 @@ def app(appId, lang='en', country='us', **kwargs):
     ScraperException
         Raised if an error occured when scraping Google Play Store or parsing the response.
     """
-    return _wrapper.app(appId, **kwargs)
+    vargs = {
+        'appId': appId,
+        'lang': lang,
+        'country': country,
+        **kwargs
+    }
+    return _wrapper.app(**vargs)
 
 def list(collection=None, category=None, age=None, num=500, lang='en', country='us', fullDetail=False, **kwargs):
     """
