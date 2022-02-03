@@ -11,11 +11,13 @@ with open(README, 'r') as f:
 
 setup(
     name='google-play-scraper-py',
-    version='0.2.2',
+    version='0.2.3',
     description='Scrape application data from the Google Play store.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/blues-lab/google-play-scraper-py',
+    author='Berkeley Lab for Usable and Experimental Security (BLUES)',
+    author_email='blues@berkeley.edu',
     license='MIT',
     classifiers=[
         'License :: OSI Approved :: MIT License',
