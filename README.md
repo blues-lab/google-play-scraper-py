@@ -1,5 +1,10 @@
 # google-play-scraper-py
 
+[![PyPI](https://img.shields.io/pypi/v/google-play-scraper-py)](https://pypi.org/project/google-play-scraper-py/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/google-play-scraper-py)](https://github.com/blues-lab/google-play-scraper-py)
+[![PyPI - License](https://img.shields.io/pypi/l/google-play-scraper-py)](https://github.com/blues-lab/google-play-scraper-py/blob/master/LICENSE)
+[![PyPI - Wheel](https://img.shields.io/pypi/wheel/google-play-scraper-py)](https://github.com/blues-lab/google-play-scraper-py)
+
 Python wrapper around the [Node.js module](https://github.com/facundoolano/google-play-scraper) to scrape application data from the Google Play store. Please refer to the module's page for the most up-to-date information about the API.
 
 Any questions, suggestions, or issues with the underlying Node.js functionality should be directed to [facundoolano](https://github.com/facundoolano), who is the developer of the original module.
