@@ -15,20 +15,37 @@ class _Wrapper:
     node_dir = [x if x != '' else os.path.sep for x in NODE_DIR.split(os.path.sep)]
     require_dir = "'{}'".format("', '".join(node_dir))
 
+    init_script = "var gplay = require(path.join({}));"
     api_script = (
         "var gplay = require(path.join({})){};"
         "gplay.{}({{{}}})"
         ".then(JSON.stringify).then(console.log).catch(console.log);"
     )
-
     var_script = (
         "var gplay = require(path.join({})){};"
         "let x = gplay.{};"
         "console.log(JSON.stringify(x));"
     )
 
-    def __init__(self, memoization=False, vars=[]):
+    def __init__(self, memoization=False):
         self.memoization = '.memoized()' if memoization else ''
+
+    def check_modules(self):
+        args = ['node', '-e', self.init_script.format(self.require_dir)]
+        try:
+            subprocess.run(args, capture_output=True, check=True)
+        except subprocess.CalledProcessError as e:
+            stderr = e.stderr.decode()
+            if 'Error: Cannot find module' in stderr:
+                return False
+            raise ScraperException(stderr) from None
+        return True
+
+    def update_modules(self):
+        install_args = ['npm', '--prefix', SELF_DIR, 'update']
+        return subprocess.run(install_args, capture_output=True, check=True)
+
+    def set_vars(self, vars=[]):
         for var in vars:
             setattr(_Wrapper, var, self._execute_var(var))
 
@@ -73,7 +90,11 @@ class _Wrapper:
 
 
 # Private module attributes.
-_wrapper = _Wrapper(vars=['collection', 'category', 'age', 'sort'])
+_wrapper = _Wrapper()
+_wrapper.update_modules()
+
+# Set wrapper fields.
+_wrapper.set_vars(vars=['collection', 'category', 'age', 'sort'])
 
 # Public module attributes.
 collection = _wrapper.collection
