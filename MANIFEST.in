@@ -1,1 +1,1 @@
-recursive-include scraper/node_modules *
+include scraper/package.json

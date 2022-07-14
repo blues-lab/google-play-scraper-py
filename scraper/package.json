@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "google-play-scraper": "^8.1.0"
+    "google-play-scraper": "*"
   }
 }
