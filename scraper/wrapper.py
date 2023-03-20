@@ -165,6 +165,13 @@ def permissions(appId, **kwargs):
     return output
 
 
+def datasafety(appId, **kwargs):
+    keys = ['appId', 'lang']
+    output = _wrapper._execute_api(
+        'datasafety', keys,  **{'appId': appId, **kwargs})
+    return output
+
+
 def categories(**kwargs):
     output = _wrapper._execute_api('categories', [],  **kwargs)
     return output

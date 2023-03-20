@@ -331,6 +331,41 @@ def permissions(appId, lang='en', short=False, **kwargs):
     }
     return _wrapper.permissions(**vargs)
 
+def datasafety(appId, lang='en', **kwargs):
+    """
+    Returns the data safety information of an application.
+    The data safety is categorized into lists of "data shared", "data collected" and "security practices".
+    Addtionally, the URL to the privacy policy is returned.
+
+    Parameters
+    ----------
+    appId : str
+        The Google Play id of the application to get data safety information for.
+    lang : str, optional
+        The two letter language code in which to fetch the app page (default is 'en').
+    **kwargs : dict
+        Keyword arguments.
+
+    Returns
+    -------
+    list of dict or list of str
+        List of dictionaries (if `short` is True) or list of strings (if `short` is False)
+        corresponding to the permissions an app has access to.
+
+    Raises
+    ------
+    ScraperException
+        Raised if an error occured when scraping Google Play Store or parsing the response.
+    """
+    vargs = {
+        'appId': appId,
+        'lang': lang,
+        **kwargs
+    }
+    return _wrapper.datasafety(**vargs)
+
+
+
 def categories(**kwargs):
     """
     Retrieve a full list of categories present from dropdown menu on Google Play Store.

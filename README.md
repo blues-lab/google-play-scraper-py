@@ -92,6 +92,7 @@ Available methods:
 - [reviews](#reviews): Retrieves a page of reviews for a specific application.
 - [similar](#similar): Returns a list of similar apps to the one specified.
 - [permissions](#permissions): Returns the list of permissions an app has access to.
+- [datasafety](#datasafety): Returns the data safety information of an app.
 - [categories](#categories): Retrieve a full list of categories present from dropdown menu on Google Play.
 
 ### app
@@ -181,6 +182,13 @@ Returns the list of permissions an app has access to.
 * `short` (optional, defaults to `false`): if `true`, the permission names will be returned instead of
 permission/description objects.
 
+
+### datasafety
+Returns the data safety information of an application. The data safety is categorized into lists of "data shared",
+"data collected" and "security practices". Addtionally, the URL to the privacy policy is returned.
+
+* `appId`: the Google Play id of the application to get permissions for.
+* `lang` (optional, defaults to `'en'`): the two letter language code in which to fetch the permissions.
 
 ### categories
 Retrieve a full list of categories present from dropdown menu on Google Play.
