@@ -11,7 +11,7 @@ with open(README, 'r') as f:
 
 setup(
     name='google-play-scraper-py',
-    version='0.3.0',
+    version='0.3.1',
     description='Scrape application data from the Google Play store.',
     long_description=long_description,
     long_description_content_type='text/markdown',
